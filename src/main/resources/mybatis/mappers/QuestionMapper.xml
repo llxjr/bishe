@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.promotion.core.dao.QuestionDao">
+   
+    
+    <resultMap type="Question" id="QuestionResult">
+        <result property="id" column="id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="chapterId" column="chapter_id" />
+        <result property="parentId" column="parent_id" />
+        <result property="level" column="level" />
+        <result property="questionType" column="question_type" />
+        <result property="stem" column="stem" />
+        <result property="answerNum" column="answer_num"/>
+        <result property="correctNum" column="correct_num"/>
+        <result property="value" column="value"/>
+        <result property="correct" column="correct"/>
+        <result property="bankType" column="bank_type"/>
+    </resultMap>
+	
+    <select id="findAllQuestion"  resultMap="QuestionResult">
+    	SELECT
+		id,create_time,create_by,update_time,update_by,chapter_id,parent_id,level,question_type,
+		stem,answer_num,correct_num,value,correct,bank_type
+		FROM qf_question
+    </select>
+
+    <select id="findById" parameterType="int" resultMap="QuestionResult">
+    	SELECT
+		id,create_time,create_by,update_time,update_by,chapter_id,parent_id,level,question_type,
+		stem,answer_num,correct_num,value,correct,bank_type
+		FROM qf_question
+		WHERE id = #{0}
+    </select>
+    
+    
+    <select id="findQuestion" parameterType="Map" resultMap="QuestionResult">
+        select 
+        id,create_time,create_by,update_time,update_by,chapter_id,parent_id,level,question_type,
+		stem,answer_num,correct_num,value,correct,bank_type
+		 from qf_question
+        <where>
+            <if test="stem!=null and stem!='' ">
+                and stem like #{stem}
+            </if>
+           
+        </where>
+       
+    </select>
+
+    <select id="getTotalQuestion" parameterType="Map" resultType="Long">
+        select count(*) from qf_question
+        <where>
+            <if test="stem!=null and stem!='' ">
+                and stem like #{stem}
+            </if>
+        </where>
+    </select>
+
+    <insert id="addQuestion" parameterType="Question">
+        insert into qf_question(stem,chapter_id,parent_id,level,question_type,answer_num,correct_num,value,correct,bank_type)
+        values(#{stem},#{chapterId},#{parentId},#{level},#{questionType},#{answerNum},#{correctNum},#{value},#{correct},#{bankType})
+    </insert>
+
+   <update id="updateQuestion" parameterType="Question" >
+        update qf_question
+        <set>
+            <if test="stem!=null and stem!='' ">
+                `stem`=#{stem},
+            </if>
+            <if test="chapterId!=null and chapterId!='' ">
+                `chapter_id`=#{chapterId},
+            </if>
+            <if test="parentId!=null and parentId!='' ">
+                `parent_id`=#{parentId},
+            </if>
+            <if test="level!=null and level!='' ">
+                `level`=#{level},
+            </if>
+            <if test="questionType!=null and questionType!='' ">
+                `question_type`=#{questionType},
+            </if>
+            <if test="answerNum!=null and answerNum!='' ">
+                `answer_num`=#{answerNum},
+            </if>
+            <if test="correctNum!=null and correctNum!='' ">
+                `correct_num`=#{correctNum},
+            </if>
+            <if test="value!=null and value!='' ">
+                `value`=#{value},
+            </if>
+            <if test="correct!=null ">
+                `correct`=#{correct},
+            </if>
+            <if test="bankType!=null and bankType!='' ">
+                `bank_type`=#{bankType},
+            </if>
+             <if test="updateTime!=null and updateTime!='' ">
+                `update_time`=#{updateTime},
+            </if>
+             <if test="updateBy!=null and updateBy!='' ">
+                `update_By`=#{updateBy},
+            </if>
+        </set>
+        where `id`=#{id}
+    </update>
+
+    <delete id="deleteQuestion" parameterType="Integer">
+        delete from qf_question
+        where id=#{id}
+    </delete>
+</mapper> 
